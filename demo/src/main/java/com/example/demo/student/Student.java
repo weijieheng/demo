@@ -4,8 +4,14 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
 
-@Entity
-@Table
+@Entity (name = "Student")
+@Table (
+        name = "Student",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "student_email_unique",
+                        columnNames = "email")
+        }
+)
 public class Student {
     @Id
     @SequenceGenerator(
@@ -17,9 +23,30 @@ public class Student {
             strategy = GenerationType.SEQUENCE,
             generator = "student_sequence"
     )
+    @Column(
+            name = "id",
+            updatable = false
+    )
     private Long id;
+
+    @Column(
+            name = "name",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String name;
+
+    @Column(
+            name = "email",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String email;
+
+    @Column(
+            name = "dob",
+            nullable = false
+    )
     private LocalDate dob;
 
     @Transient

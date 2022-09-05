@@ -1,8 +1,6 @@
 package com.example.demo.student;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -10,21 +8,20 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
-@Controller // To use GetMapping, etc
-@RequestMapping("/index")
-public class StudentController {
+@RestController // To use GetMapping, etc
+@RequestMapping(path = "api/v1/student")
+public class StudentRestController {
 
     private final StudentService studentService;
 
     @Autowired
-    public StudentController(StudentService studentService){
+    public StudentRestController(StudentService studentService){
         this.studentService = studentService;
     }
 
-    @GetMapping("/") //To serve as restful endpoint
-    public String index(Model model) {
-        model.addAttribute("students", studentService.getStudents());
-        return "StudentPage";
+    @GetMapping //To serve as restful endpoint
+    public List<Student> getStudents() {
+        return studentService.getStudents();
     }
 
     @PostMapping
@@ -32,12 +29,12 @@ public class StudentController {
         studentService.addNewStudent(student);
     }
 
-    @DeleteMapping(path = "/{studentID}")
+    @DeleteMapping(path = "{studentID}")
     public void deleteStudent(@PathVariable("studentID") Long studentId) {
         studentService.deleteStudent(studentId);
     }
 
-    @PutMapping(path = "/{studentID}")
+    @PutMapping(path = "{studentID}")
     public void updateStudent(
             @PathVariable("studentID") Long studentId,
             @RequestParam(required = false) String email,
